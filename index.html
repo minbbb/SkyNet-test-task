@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<title>SkyNet test task</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="content"></div>
+	<script>
+	$(document).ready(function() {
+		showGroups();
+	});
+	var requestURL = "getTarifs.php";
+	function showGroups(){
+		$.ajax({
+			url: requestURL,
+			type: "POST",
+			data: ({type: "groups"}),
+			dataType: "html",
+			success: function(data){
+				$("#content").html(data);
+				$("[data-link-group]").on("click", function() {
+					showVariants($(this).attr("data-link-group"));
+				});
+			}
+		});
+	}
+	function showVariants(group){
+		$.ajax({
+			url: requestURL,
+			type: "POST",
+			data: ({type: "variants", group: group}),
+			dataType: "html",
+			success: function(data){
+				$("#content").html(data);
+				$("[data-link-variant]").on("click", function() {
+					showTarif($(this).attr("data-link-group"), $(this).attr("data-link-variant"));
+				});
+			}
+		});
+	}
+	function showTarif(group, variant){
+		$.ajax({
+			url: requestURL,
+			type: "POST",
+			data: ({type: "tarif", group: group, variant: variant}),
+			dataType: "html",
+			success: function(data){
+				$("#content").html(data);
+			}
+		});
+	}
+	</script>
+</body>
+</html>
